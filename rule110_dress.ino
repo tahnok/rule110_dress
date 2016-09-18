@@ -16,17 +16,22 @@ void setup() {
 byte colour = 0;
 
 void loop() {
-  for (byte x = 0; x < COLUMNS; x++) {
-    for (byte y = 0; y < ROWS; y++) {
-      setColor(x, y, Wheel(colour++));
+  for (byte y = 0; y < ROWS; y++) {
+    for (byte x = 0; x < COLUMNS; x++) {
+      setColour(x, y, Wheel((x + y*2)*3));
       strip.show();
       delay(100);
     }
   }
 }
 
-void setColor(byte x, byte y, uint32_t colour) {
-  uint16_t pos = (42 * y) + x;
+void setColour(byte x, byte y, uint32_t colour) {
+  uint16_t pos;
+  if (y & 1) {
+    pos = (COLUMNS * y) + (COLUMNS - x - 1);
+  } else {
+    pos = (COLUMNS * y) + x;
+  }
   strip.setPixelColor(pos, colour);
 }
 
