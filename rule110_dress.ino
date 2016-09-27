@@ -5,23 +5,72 @@
 #define COLUMNS 42
 #define NUM_PINS ROWS * COLUMNS
 
+#define WIDTH ROWS
+#define HEIGHT COLUMNS
+
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PINS, PIN, NEO_GRB + NEO_KHZ800);
+
+byte start[] = { 0, 1, 0, 0, 1, 0, 1, 0};
+//byte start[WIDTH] = {0};
+
+byte* row1;
+byte* row2;
 
 void setup() {
   strip.begin();
   strip.setBrightness(32);
   strip.show();
+
+  row1 = start;
+  row2 = (byte*) malloc(sizeof(byte) * WIDTH);
 }
 
-byte colour = 0;
+byte index = 0;
 
 void loop() {
-  for (byte y = 0; y < COLUMNS; y++) {
-    for (byte x = 0; x < ROWS; x++) {
-      setColour(x, y, Wheel((x + y * 2) * 3));
-      strip.show();
-      delay(100);
+  if (index & 1) {
+    displayRow(row1, index);
+    apply(row1, row2);
+  } else {
+    displayRow(row2, index);
+    apply(row2, row1);
+  }
+  if (index > HEIGHT) {
+    index = 0;
+  } else {
+    index = index + 1;
+  }
+  delay(100);
+}
+
+void displayRow(byte* row, byte column) {
+  for (byte i = 0; i < WIDTH; i++) {
+    if (row[i]) {
+      setColour(i, column, Wheel(25));
+    } else {
+      setColour(i, column, Wheel(100));
     }
+  }
+  strip.show();
+}
+
+void apply(byte top[WIDTH], byte bottom[WIDTH]) {
+  for (byte i = 0; i < WIDTH; i++) {
+    if (i == 0 || i == WIDTH - 1) {
+      bottom[i] = top[i];
+    } else {
+      if ( (top[i - 1] && top[i] && !top[i + 1]) ||
+           (top[i - 1] && !top[i] && top[i + 1]) ||
+           (!top[i - 1] && top[i] && top[i + 1]) ||
+           (!top[i - 1] && top[i] && !top[i + 1]) ||
+           (!top[i - 1] && !top[i] && top[i + 1])
+         ) {
+        bottom[i] = 1;
+      } else {
+        bottom[i] = 0;
+      }
+    }
+
   }
 }
 
