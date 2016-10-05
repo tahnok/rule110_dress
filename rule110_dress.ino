@@ -10,7 +10,7 @@
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PINS, PIN, NEO_GRB + NEO_KHZ800);
 
-byte start[] = { 0, 1, 0, 0, 1, 0, 1, 0};
+byte start[] = { 1, 0, 1, 1, 1, 0, 0, 1};
 //byte start[WIDTH] = {0};
 
 byte* row1;
@@ -22,7 +22,7 @@ void setup() {
   strip.show();
 
   row1 = start;
-  row2 = (byte*) malloc(sizeof(byte) * WIDTH);
+  row2 = (byte*) calloc(WIDTH, sizeof(byte));
 }
 
 byte index = 0;
