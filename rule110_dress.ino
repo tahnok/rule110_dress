@@ -18,7 +18,7 @@ byte* row2;
 
 void setup() {
   strip.begin();
-  strip.setBrightness(32);
+  strip.setBrightness(16);
   strip.show();
 
   row1 = start;
@@ -29,14 +29,16 @@ byte index = 0;
 
 void loop() {
   if (index & 1) {
-    displayRow(row1, index);
-    apply(row1, row2);
-  } else {
     displayRow(row2, index);
     apply(row2, row1);
+  } else {
+    displayRow(row1, index);
+    apply(row1, row2);
+
   }
-  if (index > HEIGHT) {
+  if (index >= HEIGHT - 1) {
     index = 0;
+    for(;;);
   } else {
     index = index + 1;
   }
