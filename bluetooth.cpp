@@ -1,6 +1,6 @@
-#include <Arduino.h>
-#include <Adafruit_BLE.h>
-#include <Adafruit_BluefruitLE_SPI.h>
+
+#include "shared.h"
+
 
 #define BUFSIZE                        128   // Size of the read buffer for incoming data
 #define VERBOSE_MODE                   true  // If set to 'true' enables debug output
