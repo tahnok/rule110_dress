@@ -27,6 +27,7 @@ void setup() {
   colour1 = Wheel(25);
   colour2 = Wheel(100);
 }
+boolean enabled = true;
 
 void loop() {
   if (ble.available()) {
@@ -43,8 +44,16 @@ void loop() {
       }
       colourFlop = !colourFlop;
       resetDisplay();
+    } else if (packetbuffer[1] == 'X') {
+      resetDisplay();
+      enabled = !enabled;
+    } else if (packetbuffer[1] == 'S') {
+      resetDisplay();
+      for(byte i = 0; i < 8; i++) {
+        row1[i] = packetbuffer[i + 2];
+      }
     }
-  } else {
+  } else if(enabled) {
     if (index & 1) {
       displayRow(row2, index);
       apply(row2, row1);
@@ -66,6 +75,7 @@ void resetDisplay() {
   for (uint16_t i = 0; i < NUM_PINS; i++) {
     strip.setPixelColor(i, 0);
   }
+  strip.show();
   index = 0;
 }
 
