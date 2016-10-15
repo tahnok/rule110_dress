@@ -1,6 +1,8 @@
 #include "shared.h"
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PINS, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_PIXELS, GRID_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel highlightStrip = Adafruit_NeoPixel(HIGHLIGHT_NUM_PIXELS, HIGHLIGHT_PIN, NEO_GRBW + NEO_KHZ800);
+
 
 
 void setColour(byte x, byte y, uint32_t colour) {

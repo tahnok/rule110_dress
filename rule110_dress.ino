@@ -18,14 +18,19 @@ void setup() {
   ble.setMode(BLUEFRUIT_MODE_DATA);
 
   strip.begin();
-  strip.setBrightness(16);
+  strip.setBrightness(64);
   strip.show();
+
+  highlightStrip.begin();
+  highlightStrip.setBrightness(64);
+  highlightStrip.show();
 
   row1 = start;
   row2 = (byte*) calloc(WIDTH, sizeof(byte));
 
   colour1 = Wheel(25);
   colour2 = Wheel(100);
+  setHighlight();
 }
 boolean enabled = true;
 
@@ -44,16 +49,24 @@ void loop() {
       }
       colourFlop = !colourFlop;
       resetDisplay();
+      setHighlight();
     } else if (packetbuffer[1] == 'X') {
       resetDisplay();
+      resetHighlight();
       enabled = !enabled;
     } else if (packetbuffer[1] == 'S') {
       resetDisplay();
-      for(byte i = 0; i < 8; i++) {
+      for (byte i = 0; i < 8; i++) {
         row1[i] = packetbuffer[i + 2];
       }
+    } else if (packetbuffer[1] = 'B') {
+      strip.setBrightness(packetbuffer[2]);
+      strip.show();
+      highlightStrip.setBrightness(packetbuffer[2]);
+      highlightStrip.show();
     }
-  } else if(enabled) {
+  } else if (enabled) {
+    setHighlight();
     if (index & 1) {
       displayRow(row2, index);
       apply(row2, row1);
@@ -71,8 +84,26 @@ void loop() {
   }
 }
 
+void resetHighlight() {
+  for(byte i = 0; i < HIGHLIGHT_NUM_PIXELS; i++) {
+    highlightStrip.setPixelColor(i, 0);
+  }
+  highlightStrip.show();
+}
+
+void setHighlight() {
+  for (byte i = 0; i < HIGHLIGHT_NUM_PIXELS; i++) {
+    if (i & 1) {
+      highlightStrip.setPixelColor(i, colour1);
+    } else {
+      highlightStrip.setPixelColor(i, colour2);
+    }
+  }
+  highlightStrip.show();
+}
+
 void resetDisplay() {
-  for (uint16_t i = 0; i < NUM_PINS; i++) {
+  for (uint16_t i = 0; i < NUM_PIXELS; i++) {
     strip.setPixelColor(i, 0);
   }
   strip.show();

@@ -5,10 +5,13 @@
 #include <Adafruit_BluefruitLE_SPI.h>
 
 
-#define PIN 6
+#define GRID_PIN 6
 #define ROWS 8
 #define COLUMNS 42
-#define NUM_PINS ROWS * COLUMNS
+#define NUM_PIXELS ROWS * COLUMNS
+
+#define HIGHLIGHT_PIN 12
+#define HIGHLIGHT_NUM_PIXELS 20
 
 #define WIDTH ROWS
 #define HEIGHT COLUMNS
@@ -20,6 +23,7 @@ extern uint8_t packetbuffer[];
 
 
 extern Adafruit_NeoPixel strip;
+extern Adafruit_NeoPixel highlightStrip;
 void setColour(byte x, byte y, uint32_t colour);
 uint32_t Wheel(byte WheelPos);
 
